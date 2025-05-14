@@ -23,8 +23,9 @@ class Fuzzer:
     def print_stats(self):
         pass
 
-    def run(self, runner: Runner = Runner()) \
-            -> Tuple[subprocess.CompletedProcess, Outcome]:
+    def run(
+        self, runner: Runner = Runner()
+    ) -> Tuple[subprocess.CompletedProcess, Outcome]:
         """Run `runner` with fuzz input"""
         res = runner.run(self.fuzz())
         self.total_execs += 1
@@ -33,8 +34,9 @@ class Fuzzer:
             self.last_print_time = time.time()
         return res
 
-    def runs(self, runner: Runner = Runner(), run_time: int = 60) \
-            -> List[Tuple[subprocess.CompletedProcess, Outcome]]:
+    def runs(
+        self, runner: Runner = Runner(), run_time: int = 60
+    ) -> List[Tuple[subprocess.CompletedProcess, Outcome]]:
         """Run `runner` with fuzz input, `trials` times"""
         res = list()
         while time.time() - self.start_time < run_time:

@@ -13,7 +13,7 @@ class FunctionCoverageRunner(Runner):
         self.function = function
         self.cumulative_coverage: List[int] = []
         self.all_coverage: Set[Location] = set()
-        
+
     def run_function(self, inp: str) -> Any:
         with Coverage() as cov:
             try:
@@ -29,7 +29,7 @@ class FunctionCoverageRunner(Runner):
 
     def coverage(self) -> Set[Location]:
         return self._coverage
-    
+
     def run(self, inp: str) -> Tuple[Any, str]:
         try:
             result = self.run_function(inp)

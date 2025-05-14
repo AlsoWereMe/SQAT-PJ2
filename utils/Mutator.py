@@ -78,7 +78,7 @@ class Mutator:
             arithmetic_random_bytes,
             interesting_random_bytes,
             havoc_random_insert,
-            havoc_random_replace
+            havoc_random_replace,
         ]
 
     def mutate(self, inp: Any) -> Any:

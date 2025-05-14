@@ -32,7 +32,7 @@ class Coverage:
         if event == "line":
             function_name = frame.f_code.co_name
             lineno = frame.f_lineno
-            if function_name != '__exit__':  # avoid tracing ourselves:
+            if function_name != "__exit__":  # avoid tracing ourselves:
                 self._trace.append((function_name, lineno))
 
         return self.traceit
@@ -43,8 +43,9 @@ class Coverage:
         sys.settrace(self.traceit)
         return self
 
-    def __exit__(self, exc_type: Type, exc_value: BaseException,
-                 tb: TracebackType) -> Optional[bool]:
+    def __exit__(
+        self, exc_type: Type, exc_value: BaseException, tb: TracebackType
+    ) -> Optional[bool]:
         """End of `with` block. Turn off tracing."""
         sys.settrace(self.original_trace_function)
         return None  # default: pass all exceptions
@@ -63,7 +64,7 @@ class Coverage:
 
     def __repr__(self) -> str:
         """Return a string representation of this object.
-           Show covered (and uncovered) program code"""
+        Show covered (and uncovered) program code"""
         t = ""
         for function_name in self.function_names():
             # Similar code as in the example above
@@ -74,7 +75,9 @@ class Coverage:
                 continue
 
             source_lines, start_line_number = inspect.getsourcelines(fun)
-            for lineno in range(start_line_number, start_line_number + len(source_lines)):
+            for lineno in range(
+                start_line_number, start_line_number + len(source_lines)
+            ):
                 if (function_name, lineno) not in self.trace():
                     t += "# "
                 else:
@@ -85,8 +88,9 @@ class Coverage:
         return t
 
 
-def population_coverage(population: List[str], function: Callable) \
-        -> Tuple[Set[Location], List[int]]:
+def population_coverage(
+    population: List[str], function: Callable
+) -> Tuple[Set[Location], List[int]]:
     cumulative_coverage: List[int] = []
     all_coverage: Set[Location] = set()
 

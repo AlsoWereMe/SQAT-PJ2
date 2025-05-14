@@ -16,8 +16,16 @@ class Result:
         self.end_time = end_time
 
     def __str__(self):
-        return "Covered Lines: " + str(self.covered_line) + ", Crashes Num: " + str(self.crashes) + ", Start Time: " + str(self.start_time) + ", End Time: " + str(self.end_time)
-
+        return (
+            "Covered Lines: "
+            + str(self.covered_line)
+            + ", Crashes Num: "
+            + str(self.crashes)
+            + ", Start Time: "
+            + str(self.start_time)
+            + ", End Time: "
+            + str(self.end_time)
+        )
 
 
 if __name__ == "__main__":
@@ -26,7 +34,9 @@ if __name__ == "__main__":
 
     # 从本地语料库中读取 Seeds 并构建 Fuzzer
     seeds = load_object("corpus/corpus_1")
-    grey_fuzzer = PathGreyBoxFuzzer(seeds=seeds, schedule=PathPowerSchedule(5), is_print=True)
+    grey_fuzzer = PathGreyBoxFuzzer(
+        seeds=seeds, schedule=PathPowerSchedule(5), is_print=True
+    )
 
     # 记录开始时间
     start_time = time.time()
@@ -35,7 +45,12 @@ if __name__ == "__main__":
     grey_fuzzer.runs(f_runner, run_time=60)
 
     # 将 Coverage 与 Crash 的信息导出
-    res = Result(grey_fuzzer.covered_line, set(grey_fuzzer.crash_map.values()), start_time, time.time())
+    res = Result(
+        grey_fuzzer.covered_line,
+        set(grey_fuzzer.crash_map.values()),
+        start_time,
+        time.time(),
+    )
     dump_object("_result" + os.sep + "Sample-1.pkl", res)
 
     # 查看本次 fuzzing 的执行信息
