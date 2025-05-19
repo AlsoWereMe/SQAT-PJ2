@@ -33,7 +33,6 @@ def sample2(s: str):
 
 
 def sample3(s: str):
-<<<<<<< HEAD
     if s[0] == 'F':
         if s[1] == 'D':
             if s[2] == 'U':
@@ -42,16 +41,6 @@ def sample3(s: str):
                     index = s.index("L")
                     assert s[index + 1] == 'A'
                     if not s[index + 2:].startswith('B'):
-=======
-    if s[0] == "F":
-        if s[1] == "D":
-            if s[2] == "U":
-                t = (ord(s[4]) - 65) / (ord(s[3]) - 80)
-                if t != 0:
-                    index = s.index("L")
-                    assert s[index + 1] == "A"
-                    if not s[index + 2 :].startswith("B"):
->>>>>>> 422d6230d328c82a191d4624dc334c575d738394
                         raise RuntimeError
 
 
