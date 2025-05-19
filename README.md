@@ -26,7 +26,7 @@
 该包下目前共有 2 个文件，具体体现为：
 
 1. PowerSchedule.py：该文件中的 PowerSchedule 类，为所有 PowerSchedules 的基类，PowerSchedule 是进行 Seed 选择调度的工具类
-2. PathSchedule.py：该文件中的 PathPowerSchedule 继承自 PowerSchedule 类，目前没有编写逻辑，预期实现效果为 **根据 inputs 经过的路径频率动态选择 Seed**
+2. PathPowerSchedule.py：该文件中的 PathPowerSchedule 继承自 PowerSchedule 类，目前没有编写逻辑，预期实现效果为 **根据 inputs 经过的路径频率动态选择 Seed**
 
 ### Samples
 
