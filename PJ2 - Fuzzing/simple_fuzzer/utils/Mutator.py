@@ -64,6 +64,7 @@ def arithmetic_random_bytes(s: str) -> str:
     从 s 中随机挑选一个 byte，将其与其后面 N - 1 个 bytes 进行字节随机增减
     注意：不要越界；如果出现单个字节在添加随机数之后，可以通过取模操作使该字节落在 [0, 255] 之间
     """
+    
     # TODO
     if not s:
         return s
