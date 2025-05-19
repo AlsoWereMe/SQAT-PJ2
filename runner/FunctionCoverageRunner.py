@@ -29,11 +29,7 @@ class FunctionCoverageRunner(Runner):
 
     def coverage(self) -> Set[Location]:
         return self._coverage
-<<<<<<< HEAD
     
-=======
-
->>>>>>> 422d6230d328c82a191d4624dc334c575d738394
     def run(self, inp: str) -> Tuple[Any, str]:
         try:
             result = self.run_function(inp)

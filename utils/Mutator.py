@@ -11,13 +11,9 @@ def insert_random_character(s: str) -> str:
     插入的 byte 为随机生成，范围为 [32, 127]
     """
     # TODO
-<<<<<<< HEAD
     pos = random.randint(0, len(s))
     random_char = chr(random.randint(32, 127))
     return s[:pos] + random_char + s[pos:]
-=======
-    return s
->>>>>>> 422d6230d328c82a191d4624dc334c575d738394
 
 
 def flip_random_bits(s: str) -> str:
@@ -27,7 +23,6 @@ def flip_random_bits(s: str) -> str:
     注意：不要越界
     """
     # TODO
-<<<<<<< HEAD
     if not s:
         return s
     
@@ -57,9 +52,6 @@ def flip_random_bits(s: str) -> str:
             byte_index += 1
             
     return bytes_arr.decode(errors='ignore')
-=======
-    return s
->>>>>>> 422d6230d328c82a191d4624dc334c575d738394
 
 
 def arithmetic_random_bytes(s: str) -> str:
@@ -73,7 +65,6 @@ def arithmetic_random_bytes(s: str) -> str:
     注意：不要越界；如果出现单个字节在添加随机数之后，可以通过取模操作使该字节落在 [0, 255] 之间
     """
     # TODO
-<<<<<<< HEAD
     if not s:
         return s
     
@@ -95,9 +86,6 @@ def arithmetic_random_bytes(s: str) -> str:
         bytes_arr[start_pos + i] = (bytes_arr[start_pos + i] + delta) % 256
         
     return bytes_arr.decode(errors='ignore')
-=======
-    return s
->>>>>>> 422d6230d328c82a191d4624dc334c575d738394
 
 
 def interesting_random_bytes(s: str) -> str:
@@ -109,7 +97,6 @@ def interesting_random_bytes(s: str) -> str:
     注意：不要越界
     """
     # TODO
-<<<<<<< HEAD
     if not s:
         return s
         
@@ -128,9 +115,6 @@ def interesting_random_bytes(s: str) -> str:
         n_bytes = len(bytes_arr)
         
     start_pos = random.randint(0, len(bytes_arr) - n_bytes)
-=======
-    return s
->>>>>>> 422d6230d328c82a191d4624dc334c575d738394
 
 
 def havoc_random_insert(s: str):
@@ -139,7 +123,6 @@ def havoc_random_insert(s: str):
     随机选取一个位置，插入一段的内容，其中 75% 的概率是插入原文中的任意一段随机长度的内容，25% 的概率是插入一段随机长度的 bytes
     """
     # TODO
-<<<<<<< HEAD
     if not s:
         return s
         
@@ -159,9 +142,6 @@ def havoc_random_insert(s: str):
     
     bytes_arr[insert_pos:insert_pos] = content
     return bytes_arr.decode(errors='ignore')
-=======
-    return s
->>>>>>> 422d6230d328c82a191d4624dc334c575d738394
 
 
 def havoc_random_replace(s: str):
@@ -170,7 +150,6 @@ def havoc_random_replace(s: str):
     随机选取一个位置，替换随后一段随机长度的内容，其中 75% 的概率是替换为原文中的任意一段随机长度的内容，25% 的概率是替换为一段随机长度的 bytes
     """
     # TODO
-<<<<<<< HEAD
     if not s:
         return s
         
@@ -194,9 +173,6 @@ def havoc_random_replace(s: str):
     
     bytes_arr[replace_pos:replace_pos + replace_length] = content
     return bytes_arr.decode(errors='ignore')
-=======
-    return s
->>>>>>> 422d6230d328c82a191d4624dc334c575d738394
 
 
 class Mutator:
@@ -209,11 +185,7 @@ class Mutator:
             arithmetic_random_bytes,
             interesting_random_bytes,
             havoc_random_insert,
-<<<<<<< HEAD
             havoc_random_replace
-=======
-            havoc_random_replace,
->>>>>>> 422d6230d328c82a191d4624dc334c575d738394
         ]
 
     def mutate(self, inp: Any) -> Any:
