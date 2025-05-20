@@ -116,6 +116,19 @@ def interesting_random_bytes(s: str) -> str:
         
     start_pos = random.randint(0, len(bytes_arr) - n_bytes)
 
+    # 根据字节数选择相应的有趣值
+    if n_bytes == 1:
+        value = random.choice(interesting_8)
+        bytes_arr[start_pos] = value
+    elif n_bytes == 2:
+        value = random.choice(interesting_16)
+        bytes_arr[start_pos:start_pos + 2] = struct.pack(">H", value)
+    else:  # n_bytes == 4
+        value = random.choice(interesting_32)
+        bytes_arr[start_pos:start_pos + 4] = struct.pack(">I", value)
+        
+    return bytes_arr.decode(errors='ignore')
+
 
 def havoc_random_insert(s: str):
     """
