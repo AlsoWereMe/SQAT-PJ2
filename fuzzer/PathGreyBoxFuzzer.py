@@ -14,19 +14,12 @@ class PathGreyBoxFuzzer(GreyBoxFuzzer):
 
         # TODO
 
-<<<<<<< HEAD
-        print("""
-┌───────────────────────┬───────────────────────┬───────────────────────┬───────────────────┬───────────────────┬────────────────┬───────────────────┐
-│        Run Time       │     Last New Path     │    Last Uniq Crash    │    Total Execs    │    Total Paths    │  Uniq Crashes  │   Covered Lines   │
-├───────────────────────┼───────────────────────┼───────────────────────┼───────────────────┼───────────────────┼────────────────┼───────────────────┤""")
-=======
         print(
             """
 ┌───────────────────────┬───────────────────────┬───────────────────────┬───────────────────┬───────────────────┬────────────────┬───────────────────┐
 │        Run Time       │     Last New Path     │    Last Uniq Crash    │    Total Execs    │    Total Paths    │  Uniq Crashes  │   Covered Lines   │
 ├───────────────────────┼───────────────────────┼───────────────────────┼───────────────────┼───────────────────┼────────────────┼───────────────────┤"""
         )
->>>>>>> 422d6230d328c82a191d4624dc334c575d738394
 
     def print_stats(self):
         def format_seconds(seconds):
@@ -37,15 +30,6 @@ class PathGreyBoxFuzzer(GreyBoxFuzzer):
 
         template = """│{runtime}│{path_time}│{crash_time}│{total_exec}│{total_path}│{uniq_crash}│{covered_line}│
 ├───────────────────────┼───────────────────────┼───────────────────────┼───────────────────┼───────────────────┼────────────────┼───────────────────┤"""
-<<<<<<< HEAD
-        template = template.format(runtime=format_seconds(time.time() - self.start_time).center(23),
-                                   path_time="".center(23),
-                                   crash_time=format_seconds(self.last_crash_time - self.start_time).center(23),
-                                   total_exec=str(self.total_execs).center(19),
-                                   total_path="".center(19),
-                                   uniq_crash=str(len(set(self.crash_map.values()))).center(16),
-                                   covered_line=str(len(self.covered_line)).center(19))
-=======
         template = template.format(
             runtime=format_seconds(time.time() - self.start_time).center(23),
             path_time="".center(23),
@@ -57,7 +41,6 @@ class PathGreyBoxFuzzer(GreyBoxFuzzer):
             uniq_crash=str(len(set(self.crash_map.values()))).center(16),
             covered_line=str(len(self.covered_line)).center(19),
         )
->>>>>>> 422d6230d328c82a191d4624dc334c575d738394
         print(template)
 
     def run(self, runner: FunctionCoverageRunner) -> Tuple[Any, str]:  # type: ignore
