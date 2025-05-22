@@ -7,15 +7,24 @@ class Seed:
 
     _id_counter = 0  # 类变量，用于生成唯一 id
 
-    def __init__(self, data: str, _coverage: Set[Location]) -> None:
-        """Initialize from seed data"""
+    def __init__(self, data: str, coverage: Set[Location], energy: float = 0.0):
         self.data = data
-        self.coverage: Set[Location] = _coverage
-        self.energy = 0.0
+        self.coverage = coverage
+        self.energy = energy
+        self.id = self._generate_id(data)
 
-        # 为每个 Seed 分配唯一 id
-        self.id = Seed._id_counter
-        Seed._id_counter += 1
+    @staticmethod
+    def _generate_id(data: str) -> int:
+        """基于数据内容生成唯一ID"""
+        return hash(data)
+    
+    def __getstate__(self):
+        """控制序列化内容"""
+        return (self.data, self.coverage, self.energy, self.id)
+
+    def __setstate__(self, state):
+        """反序列化"""
+        self.data, self.coverage, self.energy, self.id = state
 
     def __str__(self) -> str:
         """Returns data as string representation of the seed"""
