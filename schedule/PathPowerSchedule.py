@@ -11,7 +11,6 @@ class PathPowerSchedule(PowerSchedule):
     """
 
     def __init__(self, seed_num) -> None:
-        super().__init__(seed_num)
         self.path_frequency = {}  # 路径频率统计，path(str) -> 频率(int)
         self.seed_path_map = {}   # seed_id(str/int) -> 路径(str)
 
