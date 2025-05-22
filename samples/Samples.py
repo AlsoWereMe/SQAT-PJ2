@@ -33,14 +33,14 @@ def sample2(s: str):
 
 
 def sample3(s: str):
-    if s[0] == "F":
-        if s[1] == "D":
-            if s[2] == "U":
+    if s[0] == 'F':
+        if s[1] == 'D':
+            if s[2] == 'U':
                 t = (ord(s[4]) - 65) / (ord(s[3]) - 80)
                 if t != 0:
                     index = s.index("L")
-                    assert s[index + 1] == "A"
-                    if not s[index + 2 :].startswith("B"):
+                    assert s[index + 1] == 'A'
+                    if not s[index + 2:].startswith('B'):
                         raise RuntimeError
 
 

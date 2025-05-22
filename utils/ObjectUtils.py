@@ -3,12 +3,12 @@ import pickle
 
 
 def dump_object(path: str, data):
-    with open(path, "wb") as f:
+    with open(path, 'wb') as f:
         pickle.dump(data, f)
 
 
 def load_object(path: str):
-    with open(path, "rb") as f:
+    with open(path, 'rb') as f:
         return pickle.load(f)
 
 
