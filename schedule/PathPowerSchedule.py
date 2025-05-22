@@ -1,4 +1,4 @@
-from typing import Dict, Sequence
+from typing import Dict, Sequence, List
 import random
 
 from schedule.PowerSchedule import PowerSchedule
@@ -6,46 +6,19 @@ from utils.Seed import Seed
 
 
 class PathPowerSchedule(PowerSchedule):
+    """基于路径频率的调度策略：优先选择能触发稀有路径的 seed。
+    
+    在 Fuzzer 执行每个输入后，调用 schedule 的 update_path_info 方法，维护调度信息。
+    
+    在选择 seed 时，调用 schedule 的 choose 方法。
     """
-    基于路径频率的调度策略：优先选择能触发稀有路径的 seed。
-    """
 
-    def __init__(self, seed_num) -> None:
-        self.path_frequency = {}  # 路径频率统计，path(str) -> 频率(int)
-        self.seed_path_map = {}   # seed_id(str/int) -> 路径(str)
+    def __init__(self) -> None:
+        # 路径频率统计，类型为{path : frequency}
+        self.path_frequency = {}
 
-    def update_path_info(self, seed_id, path):
-        """
-        更新 seed 与路径的映射关系，并统计路径频率。
-        :param seed_id: 种子的唯一标识
-        :param path: 本次执行触发的路径(可用字符串或hash表示)
-        """
-        self.seed_path_map[seed_id] = path  # 记录该 seed 触发的路径
-        if path not in self.path_frequency:
-            self.path_frequency[path] = 0   # 新路径初始化频率为0
-        self.path_frequency[path] += 1      # 路径频率加1
-
-    def choose_seed(self, seeds):
-        """
-        按路径频率倒数加权采样，优先选择能触发稀有路径的 seed。
-        :param seeds: 当前可用的种子列表
-        :return: 选中的 seed
-        """
-        weights = []
-        for seed in seeds:
-            # 获取该 seed 触发的路径
-            path = self.seed_path_map.get(seed.id, None)
-            # 获取该路径的频率，默认为1（避免除零）
-            freq = self.path_frequency.get(path, 1)
-            # 路径频率越低，权重越高
-            weights.append(1.0 / freq)
-        # 避免所有权重为0的情况，若如此则均匀采样
-        if sum(weights) == 0:
-            weights = [1.0] * len(seeds)
-        return random.choices(seeds, weights=weights, k=1)[0]
-
-    def choose(self, population):
-        return self.choose_seed(population)
+        # 种子路径映射图，类型为{seed_id : path}
+        self.seed_path_map = {}
 
     def assign_energy(self, population: Sequence[Seed]) -> None:
         """
@@ -60,5 +33,34 @@ class PathPowerSchedule(PowerSchedule):
             # 能量分配：基础能量为10，频率越低能量越高，最小为1
             seed.energy = max(1, int(10 / freq))
 
-# 在 Fuzzer 执行每个输入后，调用 schedule 的 update_path_info 方法，维护调度信息。
-# 在选择 seed 时，调用 schedule 的 choose_seed 方法。
+    def choose(self, population: List[Seed]):
+        """
+        按路径频率倒数加权采样，优先选择能触发稀有路径的 seed。
+        :param seeds: 当前可用的种子列表
+        :return: 选中的 seed
+        """
+        weights = []
+        for seed in population:
+            # 获取该 seed 触发的路径
+            path = self.seed_path_map.get(seed.id, None)
+            # 获取该路径的频率，默认为1（避免除零）
+            freq = self.path_frequency.get(path, 1)
+            # 路径频率越低，权重越高
+            weights.append(1.0 / freq)
+        # 避免所有权重为0的情况，若如此则均匀采样
+        if sum(weights) == 0:
+            weights = [1.0] * len(population)
+        return random.choices(population, weights=weights, k=1)[0]
+
+    def update_path_info(self, seed_id, path):
+        """
+        更新 seed 与路径的映射关系，并统计路径频率。
+        :param seed_id: 种子的唯一标识
+        :param path: 本次执行触发的路径(可用字符串或hash表示)
+        """
+
+        # 记录该 seed 触发的路径
+        self.seed_path_map[seed_id] = path
+
+        # 若是新路径初始化频率为0，否则频率加1
+        self.path_frequency[path] = self.path_frequency.get(path, 0) + 1
