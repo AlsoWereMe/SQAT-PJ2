@@ -26,8 +26,12 @@ class PowerSchedule:
         :return: 归一化后的能量列表
         """
         energy = list(map(lambda seed: seed.energy, population))
-        sum_energy = sum(energy)  # 所有能量求和
-        assert sum_energy != 0    # 防止除零错误
+
+        # 所有能量求和，并防止除零错误
+        sum_energy = sum(energy)
+        assert sum_energy != 0
+        
+        # 能量归一化，map将lambda函数应用到energy每个元素上，并将计算出的值组成迭代器返回，list则将迭代器转为列表返回
         norm_energy = list(map(lambda nrg: nrg / sum_energy, energy))
         return norm_energy
 
@@ -39,11 +43,13 @@ class PowerSchedule:
         """
         self.assign_energy(population)
         norm_energy = self.normalized_energy(population)
+
         # 如果种子数量超过上限，移除能量最小的种子
         if len(population) > MAX_SEEDS:
             min_index = norm_energy.index(min(norm_energy))
             del norm_energy[min_index]
             del population[min_index]
+
         # 按能量加权随机选择
         seed: Seed = random.choices(population, weights=norm_energy)[0]
         return seed
