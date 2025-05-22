@@ -2,9 +2,11 @@ import os
 import time
 
 from fuzzer.PathGreyBoxFuzzer import PathGreyBoxFuzzer
+from fuzzer.SeedAwareGryBoxFuzzer import SeedAwareGreyBoxFuzzer
 from runner.FunctionCoverageRunner import FunctionCoverageRunner
 from schedule.PathPowerSchedule import PathPowerSchedule
 from samples.Samples import sample1, sample2, sample3, sample4
+from schedule.SeedAwarePowerSchedule import SeedAwarePowerSchedule
 from utils.ObjectUtils import dump_object, load_object
 
 
@@ -30,14 +32,21 @@ class Result:
 
 if __name__ == "__main__":
     # 构建相应程序的 Runner 对象
-    f_runner = FunctionCoverageRunner(sample1)
+    f_runner = FunctionCoverageRunner(sample4)
 
     # 从本地语料库中读取 Seeds 并构建 Fuzzer
     seeds = load_object("corpus/corpus_1")
-    grey_fuzzer = PathGreyBoxFuzzer(
-        seeds=seeds, schedule=PathPowerSchedule(5), is_print=True
-    )
+    
+    # 路径调度算法
+    # grey_fuzzer = PathGreyBoxFuzzer(
+    #     seeds=seeds, schedule=PathPowerSchedule(), is_print=True
+    # )
 
+    # 种子年龄算法
+    grey_fuzzer = SeedAwareGreyBoxFuzzer(
+        seeds=seeds, schedule=SeedAwarePowerSchedule(), is_print=True 
+    )
+    
     # 记录开始时间
     start_time = time.time()
 
@@ -51,6 +60,8 @@ if __name__ == "__main__":
         start_time,
         time.time(),
     )
+
+    # 保存信息
     dump_object("_result" + os.sep + "Sample-1.pkl", res)
 
     # 查看本次 fuzzing 的执行信息
