@@ -10,10 +10,17 @@ class PathGreyBoxFuzzer(GreyBoxFuzzer):
     """Count how often individual paths are exercised."""
 
     def __init__(self, seeds: List[str], schedule: PathPowerSchedule, is_print: bool):
-        super().__init__(seeds, schedule, is_print)
-        self.path_set = set()              # 存储所有已发现的路径
-        self.last_new_path_time = self.start_time  # 最后发现新路径的时间
-        self.total_execs = 0               # 总执行次数
+        # 阻止父类打印表
+        super().__init__(seeds, schedule, is_print=False)
+
+        # 存储所有已发现的路径
+        self.path_set = set()
+
+        # 最后发现新路径的时间
+        self.last_new_path_time = self.start_time
+
+        # 总执行次数
+        self.total_execs = 0
 
         if is_print:
             print(
@@ -24,6 +31,8 @@ class PathGreyBoxFuzzer(GreyBoxFuzzer):
             )
 
     def print_stats(self):
+        """自定义统计信息打印"""
+
         def format_seconds(seconds):
             hours = int(seconds) // 3600
             minutes = int(seconds % 3600) // 60
@@ -34,8 +43,12 @@ class PathGreyBoxFuzzer(GreyBoxFuzzer):
 ├───────────────────────┼───────────────────────┼───────────────────────┼───────────────────┼───────────────────┼────────────────┼───────────────────┤"""
         template = template.format(
             runtime=format_seconds(time.time() - self.start_time).center(23),
-            path_time=format_seconds(self.last_new_path_time - self.start_time).center(23),
-            crash_time=format_seconds(self.last_crash_time - self.start_time).center(23),
+            path_time=format_seconds(self.last_new_path_time - self.start_time).center(
+                23
+            ),
+            crash_time=format_seconds(self.last_crash_time - self.start_time).center(
+                23
+            ),
             total_exec=str(self.total_execs).center(19),
             total_path=str(len(self.path_set)).center(19),
             uniq_crash=str(len(set(self.crash_map.values()))).center(16),
