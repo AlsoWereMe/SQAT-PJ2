@@ -34,7 +34,7 @@ class SeedAwarePowerSchedule(PowerSchedule):
             seed.energy = max(1, int(base_energy * (coverage_gain + 0.1) / age))
 
     def choose(self, population: List[Seed]) -> Seed:
-        """加权随机选择（基于能量）"""
+        """基于能量地加权随机选择"""
         self.assign_energy(population)
         return super().choose(population)
 
