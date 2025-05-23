@@ -10,7 +10,6 @@ def insert_random_character(s: str) -> str:
     pos 为随机生成，范围为 [0, len(s)]
     插入的 byte 为随机生成，范围为 [32, 127]
     """
-    # TODO
     pos = random.randint(0, len(s))
     random_char = chr(random.randint(32, 127))
     return s[:pos] + random_char + s[pos:]
@@ -22,7 +21,6 @@ def flip_random_bits(s: str) -> str:
     从 s 中随机挑选一个 bit，将其与其后面 N - 1 位翻转（翻转即 0 -> 1; 1 -> 0）
     注意：不要越界
     """
-    # TODO
     if not s:
         return s
 
@@ -64,7 +62,6 @@ def arithmetic_random_bytes(s: str) -> str:
     从 s 中随机挑选一个 byte，将其与其后面 N - 1 个 bytes 进行字节随机增减
     注意：不要越界；如果出现单个字节在添加随机数之后，可以通过取模操作使该字节落在 [0, 255] 之间
     """
-    # TODO
     if not s:
         return s
 
@@ -96,7 +93,6 @@ def interesting_random_bytes(s: str) -> str:
         2. 随机挑选 s 中相邻连续的 1, 2, 4 bytes，将其替换为相应 interesting_value 数组中的随机元素；
     注意：不要越界
     """
-    # TODO
     if not s:
         return s
 
@@ -135,7 +131,6 @@ def havoc_random_insert(s: str):
     基于 AFL 变异算法策略中的 random havoc 实现随机插入
     随机选取一个位置，插入一段的内容，其中 75% 的概率是插入原文中的任意一段随机长度的内容，25% 的概率是插入一段随机长度的 bytes
     """
-    # TODO
     if not s:
         return s
 
@@ -162,7 +157,6 @@ def havoc_random_replace(s: str):
     基于 AFL 变异算法策略中的 random havoc 实现随机替换
     随机选取一个位置，替换随后一段随机长度的内容，其中 75% 的概率是替换为原文中的任意一段随机长度的内容，25% 的概率是替换为一段随机长度的 bytes
     """
-    # TODO
     if not s:
         return s
 
