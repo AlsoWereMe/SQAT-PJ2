@@ -48,7 +48,8 @@ class GreyBoxFuzzer(Fuzzer):
 
         # Stacking: Apply multiple mutations to generate the candidate
         candidate = seed.data
-        trials = min(len(candidate), 1 << random.randint(1, 5))
+        # change to energy
+        trials = int(seed.energy)
         for i in range(trials):
             candidate = self.mutator.mutate(candidate)
         return candidate
