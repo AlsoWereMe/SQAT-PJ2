@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 
 from fuzzer.PathGreyBoxFuzzer import PathGreyBoxFuzzer
@@ -31,22 +32,26 @@ class Result:
 
 
 if __name__ == "__main__":
+    # 参数0、1使用不同算法
+    args = sys.argv[1]
+
     # 构建相应程序的 Runner 对象
     f_runner = FunctionCoverageRunner(sample4)
 
     # 从本地语料库中读取 Seeds 并构建 Fuzzer
     seeds = load_object("corpus/corpus_1")
-    
-    # 路径调度算法
-    # grey_fuzzer = PathGreyBoxFuzzer(
-    #     seeds=seeds, schedule=PathPowerSchedule(), is_print=True
-    # )
 
-    # 种子年龄算法
-    grey_fuzzer = SeedAwareGreyBoxFuzzer(
-        seeds=seeds, schedule=SeedAwarePowerSchedule(), is_print=True 
-    )
-    
+    if args == 0:
+        # 路径调度算法
+        grey_fuzzer = PathGreyBoxFuzzer(
+            seeds=seeds, schedule=PathPowerSchedule(), is_print=True
+        )
+    else:
+        # 种子年龄调度算法
+        grey_fuzzer = SeedAwareGreyBoxFuzzer(
+            seeds=seeds, schedule=SeedAwarePowerSchedule(), is_print=True
+        )
+
     # 记录开始时间
     start_time = time.time()
 

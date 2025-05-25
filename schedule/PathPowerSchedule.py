@@ -34,23 +34,9 @@ class PathPowerSchedule(PowerSchedule):
             seed.energy = max(1, int(10 / freq))
 
     def choose(self, population: List[Seed]):
-        """
-        按路径频率倒数加权采样，优先选择能触发稀有路径的 seed。
-        :param seeds: 当前可用的种子列表
-        :return: 选中的 seed
-        """
-        weights = []
-        for seed in population:
-            # 获取该 seed 触发的路径
-            path = self.seed_path_map.get(seed.id, None)
-            # 获取该路径的频率，默认为1（避免除零）
-            freq = self.path_frequency.get(path, 1)
-            # 路径频率越低，权重越高
-            weights.append(1.0 / freq)
-        # 避免所有权重为0的情况，若如此则均匀采样
-        if sum(weights) == 0:
-            weights = [1.0] * len(population)
-        return random.choices(population, weights=weights, k=1)[0]
+        """基于能量地加权随机选择"""
+        self.assign_energy(population)
+        return super().choose(population)
 
     def update_path_info(self, seed_id, path):
         """
