@@ -17,14 +17,17 @@ from utils.Seed import Seed
 class GreyBoxFuzzer(Fuzzer):
 
     def __init__(
-        self, seeds: List[str], schedule: PowerSchedule, is_print: bool
+        self, seeds: List[str], schedule: PowerSchedule, is_print: bool, mutator: Mutator = None
     ) -> None:
         """Constructor.
         `seeds` - a list of (input) strings to mutate.
         `mutator` - the mutator to apply.
         `schedule` - the power schedule to apply.
         """
+        if mutator is None:
+            mutator = Mutator()
         super().__init__()
+        self.mutator = mutator
         self.last_crash_time = self.start_time
         self.population = []
         self.file_map = {}
@@ -32,7 +35,6 @@ class GreyBoxFuzzer(Fuzzer):
         self.seed_index = 0
         self.crash_map = dict()
         self.seeds = seeds
-        self.mutator = Mutator()
         self.schedule = schedule
         if is_print:
             print(

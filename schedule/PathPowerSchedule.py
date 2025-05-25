@@ -1,6 +1,6 @@
-from typing import Dict, Sequence, List
+from typing import Dict, Sequence, List,Union
 import random
-
+import math
 from schedule.PowerSchedule import PowerSchedule
 from utils.Seed import Seed
 
@@ -20,18 +20,59 @@ class PathPowerSchedule(PowerSchedule):
         # 种子路径映射图，类型为{seed_id : path}
         self.seed_path_map = {}
 
-    def assign_energy(self, population: Sequence[Seed]) -> None:
+    def assign_energy(self, population: Union[Sequence[Seed], Seed]) -> None:
         """
-        为每个 seed 分配能量，能量与路径频率成反比（可用于后续多次变异）。
-        :param population: 当前种群（所有种子）
+        支持传入单个 Seed 或 Seed 列表
         """
-        for seed in population:
-            # 获取该 seed 触发的路径
+        if isinstance(population, Seed):
+            seeds = [population]  # 将单个 Seed 包装为列表
+        else:
+            seeds = population
+        
+        for seed in seeds:
             path = self.seed_path_map.get(seed.id, None)
-            # 获取该路径的频率，默认为1
             freq = self.path_frequency.get(path, 1)
-            # 能量分配：基础能量为10，频率越低能量越高，最小为1
             seed.energy = max(1, int(10 / freq))
+
+
+    def choose(self, population: List[Seed]):
+        """基于能量地加权随机选择"""
+        self.assign_energy(population)
+        return super().choose(population)
+
+    def update_path_info(self, seed_id, path):
+        """
+        更新 seed 与路径的映射关系，并统计路径频率。
+        :param seed_id: 种子的唯一标识
+        :param path: 本次执行触发的路径(可用字符串或hash表示)
+        """
+
+        # 记录该 seed 触发的路径
+        self.seed_path_map[seed_id] = path
+
+        # 若是新路径初始化频率为0，否则频率加1
+        self.path_frequency[path] = self.path_frequency.get(path, 0) + 1
+
+
+class Sample2PowerSchedule(PathPowerSchedule):
+    """样本2专用能量调度策略"""
+    
+    def assign_energy(self, population: Union[Sequence[Seed], Seed]) -> None:
+        if isinstance(population, Seed):
+            seeds = [population]
+        else:
+            seeds = population
+        
+        for seed in seeds:
+            path = self.seed_path_map.get(seed.id, None)
+            freq = self.path_frequency.get(path, 1)
+            # 强化低频路径能量分配
+            energy = 15 / (1 + math.log(freq + 1))
+            seed.energy = max(2, int(energy))
+            
+            # 短输入奖励（适配样本2的分割需求）
+            if len(seed.data) < 10:
+                seed.energy *= 1.3
 
     def choose(self, population: List[Seed]):
         """基于能量地加权随机选择"""

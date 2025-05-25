@@ -4,14 +4,16 @@ from typing import List, Tuple, Any
 from fuzzer.GreyBoxFuzzer import GreyBoxFuzzer
 from schedule.PathPowerSchedule import PathPowerSchedule
 from runner.FunctionCoverageRunner import FunctionCoverageRunner
+from utils.Mutator import Mutator
+
 
 
 class PathGreyBoxFuzzer(GreyBoxFuzzer):
     """Count how often individual paths are exercised."""
 
-    def __init__(self, seeds: List[str], schedule: PathPowerSchedule, is_print: bool):
+    def __init__(self, seeds: List[str], schedule: PathPowerSchedule, is_print: bool, mutator:Mutator = None):
         # 阻止父类打印表
-        super().__init__(seeds, schedule, is_print=False)
+        super().__init__(seeds, schedule, is_print=False, mutator=mutator)
 
         # 存储所有已发现的路径
         self.path_set = set()

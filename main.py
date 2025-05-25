@@ -1,15 +1,13 @@
 import os
-import sys
 import time
-
 from fuzzer.PathGreyBoxFuzzer import PathGreyBoxFuzzer
 from fuzzer.SeedAwareGryBoxFuzzer import SeedAwareGreyBoxFuzzer
 from runner.FunctionCoverageRunner import FunctionCoverageRunner
 from schedule.PathPowerSchedule import PathPowerSchedule
-from samples.Samples import sample1, sample2, sample3, sample4
+from utils.Mutator import Mutator
 from schedule.SeedAwarePowerSchedule import SeedAwarePowerSchedule
+from samples.Samples import sample1, sample2, sample3, sample4
 from utils.ObjectUtils import dump_object, load_object
-
 
 class Result:
     def __init__(self, coverage, crashes, start_time, end_time):
@@ -30,44 +28,59 @@ class Result:
             + str(self.end_time)
         )
 
-
-if __name__ == "__main__":
-    # 参数0、1使用不同算法
-    args = sys.argv[1]
-
-    # 构建相应程序的 Runner 对象
-    f_runner = FunctionCoverageRunner(sample4)
-
-    # 从本地语料库中读取 Seeds 并构建 Fuzzer
-    seeds = load_object("corpus/corpus_1")
-
-    if args == 0:
-        # 路径调度算法
-        grey_fuzzer = PathGreyBoxFuzzer(
-            seeds=seeds, schedule=PathPowerSchedule(), is_print=True
+def run_fuzzing(sample_func, corpus_path, sample_id, schedule_type,run_time):
+    
+    """运行单个 Sample 的 Fuzzing 测试"""
+    # 初始化 Runner 和种子
+    f_runner = FunctionCoverageRunner(sample_func)
+    seeds = load_object(corpus_path)
+    
+    if sample_id == 2:
+        from utils.Mutator import Sample2Mutator
+        from schedule.PathPowerSchedule import Sample2PowerSchedule
+        mutator = Sample2Mutator()
+        schedule = Sample2PowerSchedule()
+        fuzzer = PathGreyBoxFuzzer(
+            seeds=seeds,
+            schedule=schedule,
+            mutator=Sample2Mutator(),
+            is_print=True
         )
     else:
-        # 种子年龄调度算法
-        grey_fuzzer = SeedAwareGreyBoxFuzzer(
-            seeds=seeds, schedule=SeedAwarePowerSchedule(), is_print=True
-        )
+        # 选择调度算法
+        if schedule_type == "Path":
+            fuzzer = PathGreyBoxFuzzer(seeds=seeds, schedule=PathPowerSchedule(), mutator=Mutator(), is_print=True)
+        else:
+            fuzzer = SeedAwareGreyBoxFuzzer(seeds=seeds, schedule=SeedAwarePowerSchedule(), mutator=Mutator(), is_print=True)
+    
+    
 
-    # 记录开始时间
+    # 运行测试
     start_time = time.time()
+    fuzzer.runs(f_runner, run_time)  # 运行2小时
+    
+    # 保存结果
+    res = Result(fuzzer.covered_line, set(fuzzer.crash_map.values()), start_time, time.time())
+    dump_object(f"_result/Sample-{sample_id}.pkl", res)
 
-    # 使用 Runner 执行 Fuzzer 中的输入，并指定运行时间(s)
-    grey_fuzzer.runs(f_runner, run_time=60)
 
-    # 将 Coverage 与 Crash 的信息导出
-    res = Result(
-        grey_fuzzer.covered_line,
-        set(grey_fuzzer.crash_map.values()),
-        start_time,
-        time.time(),
-    )
+    
+    
 
-    # 保存信息
-    dump_object("_result" + os.sep + "Sample-1.pkl", res)
+if __name__ == "__main__":
+    # 定义测试配置：Sample编号 -> (目标函数, 语料库路径)
+    samples = {
+        1: (sample1, "corpus/corpus_1", 7200),
+        2: (sample2, "corpus/corpus_2", 60),
+        3: (sample3, "corpus/corpus_3", 600),
+        4: (sample4, "corpus/corpus_4", 600)
+    }
 
-    # 查看本次 fuzzing 的执行信息
-    print(load_object("_result" + os.sep + "Sample-1.pkl"))
+    
+    # 遍历所有 Sample 和调度算法
+    for sample_id, (sample_func, corpus_path, run_time) in samples.items():
+        for schedule_type in ["Path"]:  # 两种调度算法
+            print(f"Testing Sample {sample_id} with {schedule_type}...")
+            run_fuzzing(sample_func, corpus_path, sample_id, schedule_type, run_time)
+    
+    print("All tests completed. Results saved to _result/ directory.")
