@@ -36,7 +36,8 @@ if __name__ == "__main__":
     args = sys.argv[1]
 
     # 构建相应程序的 Runner 对象
-    f_runner = FunctionCoverageRunner(sample4)
+    current_sample = sample4
+    f_runner = FunctionCoverageRunner(current_sample)
 
     # 从本地语料库中读取 Seeds 并构建 Fuzzer
     seeds = load_object("corpus/corpus_1")
@@ -56,7 +57,7 @@ if __name__ == "__main__":
     start_time = time.time()
 
     # 使用 Runner 执行 Fuzzer 中的输入，并指定运行时间(s)
-    grey_fuzzer.runs(f_runner, run_time=60)
+    grey_fuzzer.runs(f_runner, run_time=5)
 
     # 将 Coverage 与 Crash 的信息导出
     res = Result(
@@ -66,8 +67,20 @@ if __name__ == "__main__":
         time.time(),
     )
 
+    # 自动创建目录
+    result_dir = "_result"
+    os.makedirs(result_dir, exist_ok=True)
+
     # 保存信息
-    dump_object("_result" + os.sep + "Sample-1.pkl", res)
+    sample_name = f_runner.function.__name__
+    # 提取数字部分 "4"
+    sample_number = sample_name.replace("sample", "")
+    # 生成动态文件名
+    result_filename = f"Sample-{sample_number}.pkl"
+    result_path = os.path.join("_result", result_filename)
+    # 保存结果
+    os.makedirs("_result", exist_ok=True)
+    dump_object(result_path, res)
 
     # 查看本次 fuzzing 的执行信息
-    print(load_object("_result" + os.sep + "Sample-1.pkl"))
+    print(load_object(result_path))
