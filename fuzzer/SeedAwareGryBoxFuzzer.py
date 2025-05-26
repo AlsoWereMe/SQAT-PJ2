@@ -5,16 +5,17 @@ from fuzzer.GreyBoxFuzzer import GreyBoxFuzzer
 from schedule.SeedAwarePowerSchedule import SeedAwarePowerSchedule
 from runner.FunctionCoverageRunner import FunctionCoverageRunner
 from utils.Coverage import Location
+from utils.Mutator import Mutator
 
 
 class SeedAwareGreyBoxFuzzer(GreyBoxFuzzer):
     """跟踪种子年龄和覆盖率变化的增强灰盒模糊测试器"""
 
     def __init__(
-        self, seeds: List[str], schedule: SeedAwarePowerSchedule, is_print: bool
+        self, seeds: List[str], schedule: SeedAwarePowerSchedule, is_print: bool, mutator:Mutator = None
     ):
         # 阻止父类打印表头
-        super().__init__(seeds, schedule, is_print=False)
+        super().__init__(seeds, schedule, is_print=False, mutator=mutator)
 
         # 记录每个种子的覆盖变化 {seed.id: coverage_set}
         self.seed_coverage: Dict[str, Set[Location]] = {}
